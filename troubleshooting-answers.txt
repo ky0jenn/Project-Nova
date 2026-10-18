@@ -1,0 +1,105 @@
+cat > troubleshooting-answers.txt << 'EOF'
+PART 2: TROUBLESHOOTING & EMERGENCY FIXES
+
+1. PROBLEM: The "Oops, wrong file" Problem
+   - Scenario: A file with sensitive database passwords (.env) was staged
+     using 'git add .' and must not be committed to the shared repository.
+   - Solution: Unstage only that file while keeping the local changes intact.
+   - Syntax:  git restore --staged <file>
+   - Command: git restore --staged .env
+   - Alternative: git reset HEAD .env
+
+2. PROBLEM: The "Typo in the message" Problem
+   - Scenario: The latest commit message has a typo ("authnetication") and
+     has not been pushed yet.
+   - Solution: Rewrite the most recent commit message without creating a
+     new commit. (Only safe for commits that are NOT yet pushed.)
+   - Syntax:  git commit --amend -m "<corrected-message>"
+   - Command: git commit --amend -m "Fixed authentication typo"
+
+3. PROBLEM: The "Forgot a file" Problem
+   - Scenario: A commit was made but styles.css was left out, even though
+     it belongs in that exact commit.
+   - Solution: Stage the forgotten file, then merge it into the previous
+     commit without changing the message.
+   - Syntax:
+       1. git add <file>
+       2. git commit --amend --no-edit
+   - Command:
+       1. git add styles.css
+       2. git commit --amend --no-edit
+
+4. PROBLEM: The "I hate these changes" Problem
+   - Scenario: index.html has been edited for an hour and is completely
+     broken. It is not staged or committed yet.
+   - Solution: Discard all local changes to that file and restore it to
+     the last committed version.
+   - Syntax:  git restore <file>
+   - Command: git restore index.html
+   - Alternative: git checkout -- index.html
+
+5. PROBLEM: The "Wrong Branch" Problem
+   - Scenario: 3 commits were made on main instead of a feature branch,
+     and nothing has been pushed yet.
+   - Solution: Create a new branch that points to these commits, then
+     roll main back by 3 commits.
+   - Syntax:
+       1. git branch <new-branch>
+       2. git reset --hard HEAD~<number-of-commits>
+       3. git checkout <new-branch>
+   - Command:
+       1. git branch new-feature
+       2. git reset HEAD~3 --hard
+       3. git checkout new-feature
+
+6. PROBLEM: The "Detached HEAD" Problem
+   - Scenario: After 'git checkout <old-commit-hash>', new commits were
+     made in a detached HEAD state and would be lost when switching back
+     to main.
+   - Solution: Create a new branch right where HEAD is to save the
+     floating commits.
+   - Syntax:  git switch -c <branch-name>
+   - Command: git switch -c recovery-branch
+   - Alternative: git checkout -b recovery-branch
+
+7. PROBLEM: The "Undo a pushed mistake" Problem
+   - Scenario: A buggy commit was pushed to GitHub and broke the live
+     website. The repository is shared, so history must not be rewritten
+     with git reset.
+   - Solution: Create a new commit that does the exact opposite of the
+     buggy commit, keeping the timeline intact.
+   - Syntax:  git revert <commit-hash>
+   - Command: git revert <buggy-commit-hash>
+   - Example: git revert b2affa3
+
+8. PROBLEM: The "Accidental Deletion" Problem
+   - Scenario: A branch (feature-x) with unmerged work was deleted by
+     mistake.
+   - Solution: Find the branch's last commit hash using git reflog, then
+     recreate the branch at that commit.
+   - Syntax:
+       1. git reflog
+       2. git branch <deleted-branch-name> <commit-hash>
+   - Command:
+       1. git reflog
+       2. git branch <deleted-branch-name> <commit-hash>
+   - Example: git branch feature-x 9e329a7
+   - Note: 'git branch -d' refuses to delete unmerged branches; 'git
+     branch -D' forces the deletion.
+
+9. PROBLEM: The "Ghost Files" Problem
+   - Scenario: Files were deleted using the file explorer. Git status
+     shows them as "deleted" under "Changes not staged for commit".
+   - Solution: Tell Git to record the deletions and stage them for the
+     next commit.
+   - Syntax:  git add -u
+   - Command: git add -u
+   - Alternative: git rm <filename>
+
+10. PROBLEM: The "Pushed to the void" Problem
+    - Scenario: A branch called testing-junk was accidentally pushed to
+      the remote GitHub repository and all collaborators can see it.
+    - Solution: Delete the remote branch directly from the terminal.
+    - Syntax:  git push origin --delete <branch-name>
+    - Command: git push origin --delete testing-junk
+EOF
