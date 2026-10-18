@@ -1,4 +1,3 @@
-cat > troubleshooting-answers.txt << 'EOF'
 PART 2: TROUBLESHOOTING & EMERGENCY FIXES
 
 1. PROBLEM: The "Oops, wrong file" Problem
@@ -102,4 +101,3 @@ PART 2: TROUBLESHOOTING & EMERGENCY FIXES
     - Solution: Delete the remote branch directly from the terminal.
     - Syntax:  git push origin --delete <branch-name>
     - Command: git push origin --delete testing-junk
-EOF
